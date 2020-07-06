@@ -5,6 +5,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Date 2020/7/5 20:39
@@ -12,8 +14,13 @@ import java.awt.event.WindowEvent;
  **/
 public class TankFrame extends Frame {
 
-    Tank myTank = new Tank(200,200,Dir.DOWN,this);
-    Bullet bullet = new Bullet(200,200,Dir.DOWN);
+    Tank myTank = new Tank(200,400,Dir.DOWN,Group.GOOD, this);
+
+    List<Bullet> bulletList =  new ArrayList<>();
+
+    List<Tank> tankList =  new ArrayList<>();
+
+    Explode explode = new Explode(100,100,this);
 
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
@@ -49,12 +56,28 @@ public class TankFrame extends Frame {
 
     @Override
     public void paint(Graphics g) {
+        Color c = g.getColor();
+        g.setColor(Color.WHITE);
+        g.drawString("子弹数量：" + this.bulletList.size(), 10, 60);
+        g.drawString("敌人数量：" + this.tankList.size(), 10, 80);
+        g.setColor(c);
         myTank.paint(g);
-        bullet.paint(g);
+
+        for (int i = 0; i < bulletList.size(); i++){
+            bulletList.get(i).paint(g);
+        }
+        for (int i = 0; i < tankList.size(); i++){
+            tankList.get(i).paint(g);
+        }
+        for (int i = 0; i < bulletList.size(); i++){
+            for (int j = 0; j < tankList.size(); j++){
+                bulletList.get(i).collideWith(tankList.get(j));
+            }
+        }
+        explode.paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
-
         boolean bL;
         boolean bR;
         boolean bU;
@@ -113,7 +136,6 @@ public class TankFrame extends Frame {
                 myTank.setMoving(false);
             }else {
                 myTank.setMoving(true);
-
                 if (bL) {
                     myTank.setDir(Dir.LEFT);
                 } else if (bD) {

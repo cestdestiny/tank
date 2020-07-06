@@ -1,6 +1,7 @@
 package com.lts;
 
 import java.awt.*;
+import java.util.Random;
 
 /**
  * @Date 2020/7/5 21:33
@@ -11,17 +12,27 @@ public class Tank {
     private int x,y;
 
     private Dir dir;
-    private static final int SPEND = 10;
+    private static final int SPEND = 3;
 
-    private boolean moving;
+    private boolean moving = true;
 
     private TankFrame tankFrame;
 
-    public Tank(int x, int y, Dir dir, TankFrame tankFrame) {
+    private Random random = new Random();
+
+    private Group group;
+
+    private boolean living = true;
+
+    public static int WIDTH = ImageMgr.tankD.getWidth();
+    public static int HEIGHT = ImageMgr.tankD.getHeight();
+
+    public Tank(int x, int y, Dir dir, Group group, TankFrame tankFrame) {
         this.x = x;
         this.y = y;
         this.dir = dir;
         this.tankFrame = tankFrame;
+        this.group = group;
     }
 
     public int getX() {
@@ -56,12 +67,37 @@ public class Tank {
         this.moving = moving;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
     public void paint(Graphics g) {
-        Color c = g.getColor();
-        g.setColor(Color.yellow);
-        g.fillRect(x,y,50,50);
-        g.setColor(c);
+        if (!living)
+            tankFrame.tankList.remove(this);
+        switch (dir){
+            case LEFT:
+                g.drawImage(ImageMgr.tankL,x,y,null);
+                break;
+            case RIGHT:
+                g.drawImage(ImageMgr.tankR,x,y,null);
+                break;
+            case UP:
+                g.drawImage(ImageMgr.tankU,x,y,null);
+                break;
+            case DOWN:
+                g.drawImage(ImageMgr.tankD,x,y,null);
+                break;
+        }
         move();
+        if (Group.BAD == this.group){
+            if (random.nextInt(10) > 8){
+                this.fire();
+            }
+        }
     }
 
     private void move() {
@@ -86,6 +122,21 @@ public class Tank {
     }
 
     public void fire(){
-        tankFrame.bullet = new Bullet(this.x, this.y, this.dir);
+        int bX;
+        int bY;
+        if (dir == Dir.DOWN || dir == Dir.UP){
+            bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+            bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+        }else{
+            // 待处理
+            bX = this.x + Tank.WIDTH/2 - Bullet.WIDTH/2;
+            bY = this.y + Tank.HEIGHT/2 - Bullet.HEIGHT/2;
+        }
+
+        tankFrame.bulletList.add(new Bullet(bX, bY, this.dir, this.group, tankFrame));
+    }
+
+    public void die() {
+        this.living = false;
     }
 }
