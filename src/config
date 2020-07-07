@@ -1,0 +1,3 @@
+initTank = 10
+goodTankFireStrategy = com.lts.FourFireStrategy
+badTankFireStrategy = com.lts.DefaultFireStrategy

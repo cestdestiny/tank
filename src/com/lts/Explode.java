@@ -42,11 +42,12 @@ public class Explode {
 
 
     public void paint(Graphics g){
-//        Audio a = new Audio("audio/explode.wav");
+//      Audio a = new Audio("audio/explode.wav");
 //		Audio a = new Audio("audio/war1.wav");
 //		a.loop();
+
         g.drawImage(ImageMgr.explodes[step++],this.x,this.y, null);
         if (step >= ImageMgr.explodes.length)
-            step = 0;
+            this.tankFrame.explodeList.remove(this);
     }
 }

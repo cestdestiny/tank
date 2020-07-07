@@ -19,10 +19,12 @@ public class TankFrame extends Frame {
     List<Bullet> bulletList =  new ArrayList<>();
 
     List<Tank> tankList =  new ArrayList<>();
-
-    Explode explode = new Explode(100,100,this);
+    List<Explode> explodeList = new ArrayList<>();
 
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
+
+    String goodTankFireStrategy;
+    String badTankFireStrategy;
 
     public TankFrame() {
         this.setSize(GAME_WIDTH,GAME_HEIGHT);
@@ -36,6 +38,8 @@ public class TankFrame extends Frame {
                 System.exit(0);
             }
         });
+        goodTankFireStrategy = (String) PropertiesMgr.get("goodTankFireStrategy");
+        badTankFireStrategy = (String) PropertiesMgr.get("badTankFireStrategy");
     }
 
     Image offScreenImage = null;
@@ -69,12 +73,14 @@ public class TankFrame extends Frame {
         for (int i = 0; i < tankList.size(); i++){
             tankList.get(i).paint(g);
         }
+        for (int i = 0; i < explodeList.size(); i++) {
+            explodeList.get(i).paint(g);
+        }
         for (int i = 0; i < bulletList.size(); i++){
             for (int j = 0; j < tankList.size(); j++){
                 bulletList.get(i).collideWith(tankList.get(j));
             }
         }
-        explode.paint(g);
     }
 
     class MyKeyListener extends KeyAdapter {
@@ -122,7 +128,16 @@ public class TankFrame extends Frame {
                     bD = false;
                     break;
                 case KeyEvent.VK_CONTROL:
-                    myTank.fire();
+                    FireStrategy fireStrategy = null;
+                    try {
+                        Class<?> clazz = Class.forName(goodTankFireStrategy);
+                        fireStrategy = (FireStrategy)clazz.newInstance();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                    if (myTank.getGroup() == Group.GOOD){
+                        myTank.fire(fireStrategy);
+                    }
                     break;
                 default:
                     break;
