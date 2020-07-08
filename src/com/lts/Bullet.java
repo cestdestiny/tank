@@ -1,5 +1,7 @@
 package com.lts;
 
+import com.lts.abstractFactory.BaseBullet;
+import com.lts.abstractFactory.BaseTank;
 import sun.plugin.dom.css.Rect;
 
 import java.awt.*;
@@ -11,7 +13,7 @@ import static com.lts.TankFrame.GAME_WIDTH;
  * @Date 2020/7/5 22:31
  * @Version 1.0
  **/
-public class Bullet {
+public class Bullet extends BaseBullet {
     private static final int SPEND = 10;
 
     public static int WIDTH = ImageMgr.bulletD.getWidth();
@@ -86,6 +88,8 @@ public class Bullet {
         move();
     }
 
+
+
     private void move() {
         switch (dir){
             case UP:
@@ -110,7 +114,8 @@ public class Bullet {
         rect.y = y;
     }
 
-    public void collideWith(Tank tank) {
+    @Override
+    public void collideWith(BaseTank tank) {
         if (this.group == tank.getGroup())
             return;
 
@@ -119,7 +124,7 @@ public class Bullet {
             this.die();
             int eX = tank.getX() + Tank.WIDTH/2 - Explode.WIDTH/2;
             int eY = tank.getY() + Tank.HEIGHT/2 - Explode.HEIGHT/2;
-            tankFrame.explodeList.add(new Explode(eX, eY, this.tankFrame));
+            tankFrame.explodeList.add(tankFrame.gameFactory.createExplode(eX, eY, this.tankFrame));
         }
     }
 

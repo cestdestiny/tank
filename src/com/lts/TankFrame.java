@@ -1,5 +1,10 @@
 package com.lts;
 
+import com.lts.abstractFactory.BaseBullet;
+import com.lts.abstractFactory.BaseExplode;
+import com.lts.abstractFactory.BaseTank;
+import com.lts.abstractFactory.GameFactory;
+
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -16,15 +21,17 @@ public class TankFrame extends Frame {
 
     Tank myTank = new Tank(200,400,Dir.DOWN,Group.GOOD, this);
 
-    List<Bullet> bulletList =  new ArrayList<>();
+    List<BaseBullet> bulletList =  new ArrayList<>();
 
-    List<Tank> tankList =  new ArrayList<>();
-    List<Explode> explodeList = new ArrayList<>();
+    List<BaseTank> tankList =  new ArrayList<>();
+    List<BaseExplode> explodeList = new ArrayList<>();
 
     static final int GAME_WIDTH = 800, GAME_HEIGHT = 600;
 
     String goodTankFireStrategy;
     String badTankFireStrategy;
+
+    public GameFactory gameFactory = new GameFactory();
 
     public TankFrame() {
         this.setSize(GAME_WIDTH,GAME_HEIGHT);

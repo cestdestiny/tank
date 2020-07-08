@@ -1,5 +1,7 @@
 package com.lts;
 
+import com.lts.abstractFactory.BaseTank;
+
 import java.awt.*;
 import java.util.Random;
 
@@ -7,7 +9,7 @@ import java.util.Random;
  * @Date 2020/7/5 21:33
  * @Version 1.0
  **/
-public class Tank {
+public class Tank extends BaseTank {
 
     private int x,y;
 
@@ -24,7 +26,6 @@ public class Tank {
 
     private boolean living = true;
 
-    Rectangle rect = new Rectangle();
 
     public static int WIDTH = ImageMgr.goodTankD.getWidth();
     public static int HEIGHT = ImageMgr.goodTankD.getHeight();

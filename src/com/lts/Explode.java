@@ -1,5 +1,8 @@
 package com.lts;
 
+import com.lts.abstractFactory.BaseExplode;
+import com.lts.abstractFactory.BaseTank;
+
 import java.awt.*;
 
 import static com.lts.TankFrame.GAME_HEIGHT;
@@ -9,7 +12,7 @@ import static com.lts.TankFrame.GAME_WIDTH;
  * @Date 2020/7/5 22:31
  * @Version 1.0
  **/
-public class Explode {
+public class Explode extends BaseExplode {
     public static int WIDTH = ImageMgr.explodes[0].getWidth();
     public static int HEIGHT = ImageMgr.explodes[0].getHeight();
 
